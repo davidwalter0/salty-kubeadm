@@ -1,0 +1,22 @@
+#!/bin/bash
+# generate token
+# set number of nodes
+# unused,untested
+export container_runtime=docker 
+
+# use KUBE_NUM_NODES > 0 for master minion
+# use KUBE_NUM_NODES == 0 for standalone master minion
+export KUBE_NUM_NODES=0 # defaulting to 0 for now in the script: token-gen-and-configure
+dir=$(readlink -f ${0})
+dir=${dir%salt/scripts/${0##*/}}
+dir=${dir%/}
+
+cat <<EOF | tee ${dir}/salt/pillar/kubeadm.sls > ${dir}/salt/config.yml
+kubeadm:
+  token: $(< /dev/urandom tr -dc A-Za-z0-9 | ( head -c${1:-6}; printf '.' ; head -c${1:-16} ))
+container_runtime: ${container_runtime}
+kube_num_nodes: ${KUBE_NUM_NODES}
+EOF
+
+# echo "kube_num_nodes: ${KUBE_NUM_NODES}" >> ${0%/*}/../config.yml
+

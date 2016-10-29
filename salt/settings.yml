@@ -1,0 +1,31 @@
+{% set master                =  '10.1.0.33'                         %}
+{% set pod_cidr              =  '10.2.0.0/16'                       %}
+{% set service_cidr          =  '10.3.0.0/16'                       %}                  
+{% set cluster_dns           =  '10.3.0.10'                         %}
+{% set etc_kubernetes        =  '/etc/kubernetes'                   %}
+{% set pillar_root           =  '/srv/salt/pillar'                  %}
+
+master                        :  '10.1.0.33'                         
+pod_cidr                      :  '10.2.0.0/16'                       
+service_cidr                  :  '10.3.0.0/16'                                           
+cluster_dns                   :  '10.3.0.10'                                             
+advertise_addresses           :  '--api-advertise-addresses={{master}}'
+kubelet_address               :  '--address={{master}}'
+
+host                          :  '{{grains.host}}'
+salt_root                     :  '/srv/salt' 
+etc_kubernetes                :  '{{etc_kubernetes}}' 
+bootstrap_log                 :  '{{etc_kubernetes}}/kubeadm.log' 
+token_file                    :  '{{etc_kubernetes}}/token' 
+kubernetes_config             :  '{{etc_kubernetes}}/kubelet.conf' 
+
+kubeconfig                    :  'kubelet.conf' 
+lhs                           :  'lhs.token' 
+rhs                           :  'rhs.token' 
+
+pillar_root                   :  '{{pillar_root}}' 
+kubeadm_pillar                :  '{{pillar_root}}/kubeadm.sls' 
+token                         :  '{{pillar.kubeadm.token}}'
+kubernetes_svc_file           :  '/etc/systemd/system/kubelet.service' 
+kubernetes_svc_file_drop_in   :  '/etc/systemd/system/kubelet.service.d/10-kubeadm.conf' 
+

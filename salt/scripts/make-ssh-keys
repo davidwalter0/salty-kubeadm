@@ -1,0 +1,10 @@
+#!/bin/bash -x
+dir=$(readlink -f ${0})
+dir=${dir%salt/scripts/${0##*/}}
+dir=${dir%/}
+
+for host in master node{1,2}; do
+    ssh-keygen -N "" -t rsa -f ${dir}/salt/keys/id_rsa_${host} < /dev/null;
+    cp ${dir}/salt/keys/id_rsa_${host} ${dir}/salt/keys/id_rsa_${host}.pem ;
+done
+
