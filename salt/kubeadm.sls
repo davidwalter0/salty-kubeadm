@@ -44,7 +44,7 @@
     - makedirs: true
     - contents: |
         id: {{setting.host}}
-{%-if config.kube_num_nodes > 0 %}        
+{%-if config.kubeadm.kube_num_nodes > 0 %}        
         master: 
           - {{setting.master}}
 {%-endif%}
@@ -107,6 +107,12 @@ systemctl stop kubelet:
   cmd.run
 systemctl start kubelet:
   cmd.run
+
+
+{%if config.kubeadm.kube_num_nodes == 0%}
+kubectl taint nodes master dedicated:NoSchedule- :
+  cmd.run
+{%endif%}
 
 {%endif%}
     

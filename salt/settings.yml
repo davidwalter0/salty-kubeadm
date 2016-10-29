@@ -10,7 +10,7 @@ pod_cidr                      :  '10.2.0.0/16'
 service_cidr                  :  '10.3.0.0/16'                                           
 cluster_dns                   :  '10.3.0.10'                                             
 advertise_addresses           :  '--api-advertise-addresses={{master}}'
-kubelet_address               :  '--address={{master}}'
+kubelet_address               :  '{{master}}'
 
 host                          :  '{{grains.host}}'
 salt_root                     :  '/srv/salt' 

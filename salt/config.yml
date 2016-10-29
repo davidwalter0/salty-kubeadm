@@ -1,4 +1,0 @@
-kubeadm:
-  token: uCBaYf.0WWedCXPuVHWZyJN
-container_runtime: docker
-kube_num_nodes: 0
