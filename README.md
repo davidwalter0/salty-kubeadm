@@ -1,9 +1,24 @@
 ---
 *Manage a quick stand up of a stand alone cluster using salt+vagrant+kubeadm*
 
-Currently run from debian / ubuntu with vagrant.
+Currently run from debian / ubuntu with vagrant + virtualbox + ubuntu/xenial + kubeadm.
 
 git clone https://github.com/davidwalter0/salty-kubeadm
+
+- configure a natnetwork. salt/settings.yml option master ip and node
+  ips will use this for their bridge.
+  - retain the virtualbox nat network on the primary interface
+  - in the version of the xenial box the network devices use the new
+    interface name, you may have to adjust if your setup is different
+  - if you want to run multiple of these standalone masters on a host,
+    the ip in this config will have to be managed to match the ip in
+    salt/settings.yml
+
+```
+    master.vm.provision "shell",
+                        run: "always",
+                        inline: "ifconfig enp0s8 10.1.0.33 netmask 255.255.255.0 up"
+```
 
 - run salt/scripts/make-ssh-keys to generate ssh keys for nodes.
 - run salt/scripts/token-gen-and-configure to generate tokens and write the config
