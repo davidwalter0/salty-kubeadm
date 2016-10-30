@@ -31,31 +31,12 @@ git clone https://github.com/davidwalter0/salty-kubeadm
 - I restart the kubelet with an override in the service file to fix
   the dns ip and the dns then schedules.
 
-The default kubelet service systemd unit file
-```
-    # cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-    [Service]
-    Environment="KUBELET_KUBECONFIG_ARGS=--kubeconfig=/etc/kubernetes/kubelet.conf --require-kubeconfig=true"
-    Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
-    Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
-    Environment="KUBELET_DNS_ARGS=--cluster-dns=100.64.0.10 --cluster-domain=cluster.local"
-    Environment="KUBELET_EXTRA_ARGS=--v=4"
-    ExecStart=
-    ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_EXTRA_ARGS
-```
+The default kubelet service systemd unit file is setting cluster domain to a non service domain address
 
-The modified version:
-```
-    # vagrant ssh -- sudo cat /etc/systemd/system/kubelet.service
-    [Service]
-    Environment="KUBELET_KUBECONFIG_ARGS=--kubeconfig=/etc/kubernetes/kubelet.conf --require-kubeconfig=true"
-    Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
-    Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
-    Environment="KUBELET_DNS_ARGS=--cluster-dns=10.3.0.10 --cluster-domain=cluster.local --address=--address=10.1.0.33"
-    Environment="KUBELET_EXTRA_ARGS=--v=4"
-    ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_EXTRA_ARGS
+    vagrant ssh -- sudo systemctl cat -l kubelet
+    ...
+    KUBELET_DNS_ARGS=--cluster-dns=100.64.0.10
 
-```
 
 - because systemctl monitors systemd unit files and requires a reload
   3 steps to reload and restart the kubelet
